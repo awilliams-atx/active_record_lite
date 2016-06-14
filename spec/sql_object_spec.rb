@@ -1,4 +1,4 @@
-require '01_sql_object'
+require 'sql_object'
 require 'db_connection'
 require 'securerandom'
 
@@ -8,98 +8,98 @@ describe SQLObject do
 
   context 'before ::finalize!' do
     before(:each) do
-      class Cat < SQLObject
+      class Pokemon < SQLObject
       end
     end
 
     after(:each) do
-      Object.send(:remove_const, :Cat)
+      Object.send(:remove_const, :Pokemon)
     end
 
     describe '::table_name' do
       it 'generates default name' do
-        expect(Cat.table_name).to eq('cats')
+        expect(Pokemon.table_name).to eq('pokemons')
       end
     end
 
     describe '::table_name=' do
       it 'sets table name' do
-        class Human < SQLObject
-          self.table_name = 'humans'
+        class Trainer < SQLObject
+          self.table_name = 'trainers'
         end
 
-        expect(Human.table_name).to eq('humans')
+        expect(Trainer.table_name).to eq('trainers')
 
-        Object.send(:remove_const, :Human)
+        Object.send(:remove_const, :Trainer)
       end
     end
 
     describe '::columns' do
       it 'returns a list of all column names as symbols' do
-        expect(Cat.columns).to eq([:id, :name, :owner_id])
+        expect(Pokemon.columns).to eq([:id, :name, :trainer_id])
       end
 
       it 'only queries the DB once' do
         expect(DBConnection).to(
           receive(:execute2).exactly(1).times.and_call_original)
-        3.times { Cat.columns }
+        3.times { Pokemon.columns }
       end
     end
 
     describe '#attributes' do
       it 'returns @attributes hash byref' do
-        cat_attributes = {name: 'Gizmo'}
-        c = Cat.new
-        c.instance_variable_set('@attributes', cat_attributes)
+        pokemon_attributes = {name: 'Pikachu'}
+        pkm = Pokemon.new
+        pkm.instance_variable_set('@attributes', pokemon_attributes)
 
-        expect(c.attributes).to equal(cat_attributes)
+        expect(c.attributes).to equal(pokemon_attributes)
       end
 
       it 'lazily initializes @attributes to an empty hash' do
-        c = Cat.new
+        pkm = Pokemon.new
 
-        expect(c.instance_variables).not_to include(:@attributes)
-        expect(c.attributes).to eq({})
-        expect(c.instance_variables).to include(:@attributes)
+        expect(pkm.instance_variables).not_to include(:@attributes)
+        expect(pkm.attributes).to eq({})
+        expect(pkm.instance_variables).to include(:@attributes)
       end
     end
   end
 
   context 'after ::finalize!' do
     before(:all) do
-      class Cat < SQLObject
+      class Pokemon < SQLObject
         self.finalize!
       end
 
-      class Human < SQLObject
-        self.table_name = 'humans'
+      class Trainer < SQLObject
+        self.table_name = 'trainers'
 
         self.finalize!
       end
     end
 
     after(:all) do
-      Object.send(:remove_const, :Cat)
-      Object.send(:remove_const, :Human)
+      Object.send(:remove_const, :Pokemon)
+      Object.send(:remove_const, :Trainer)
     end
 
     describe '::finalize!' do
       it 'creates getter methods for each column' do
-        c = Cat.new
-        expect(c.respond_to? :something).to be false
-        expect(c.respond_to? :name).to be true
-        expect(c.respond_to? :id).to be true
-        expect(c.respond_to? :owner_id).to be true
+        pkm = Pokemon.new
+        expect(pkm.respond_to? :something).to be false
+        expect(pkm.respond_to? :name).to be true
+        expect(pkm.respond_to? :id).to be true
+        expect(pkm.respond_to? :trainer_id).to be true
       end
 
       it 'creates setter methods for each column' do
-        c = Cat.new
-        c.name = "Nick Diaz"
-        c.id = 209
-        c.owner_id = 2
-        expect(c.name).to eq 'Nick Diaz'
-        expect(c.id).to eq 209
-        expect(c.owner_id).to eq 2
+        pkm = Pokemon.new
+        pkm.name = "Brock"
+        pkm.id = 209
+        pkm.trainer_id = 2
+        expect(pkm.name).to eq 'Brock'
+        expect(pkm.id).to eq 209
+        expect(pkm.trainer_id).to eq 2
       end
 
       it 'created getter methods read from attributes hash' do

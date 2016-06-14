@@ -1,17 +1,11 @@
-require_relative '02_searchable'
+require_relative 'searchable'
 require 'active_support/inflector'
 
-# Phase IIIa
 class AssocOptions
-  attr_accessor(
-    :foreign_key,
-    :class_name,
-    :primary_key,
-  )
+  attr_accessor :class_name, :foreign_key, :primary_key
 
   def model_class
-    # TODO: What is this for?
-    @class_name.constantize
+    class_name.constantize
   end
 
   def table_name
@@ -27,27 +21,23 @@ class BelongsToOptions < AssocOptions
       send(:"#{key}=", val)
     end
 
-    @class_name ||= name.to_s.classify
-    @foreign_key ||= :"#{name}_id"
-    @primary_key ||= :id
-
+    self.class_name ||= name.to_s.classify
+    self.foreign_key ||= :"#{name}_id"
+    self.primary_key ||= :id
   end
 end
 
 class HasManyOptions < AssocOptions
-  def initialize(name, self_class_name, options = {})
-    @foreign_key = :"#{self_class_name.underscore}_id"
-    @class_name = name.to_s.classify
-    @primary_key = :id
+  def initialize(name, klass, options = {})
+    self.foreign_key = :"#{klass.underscore}_id"
+    self.class_name = name.to_s.classify
+    self.primary_key = :id
 
-    options.each do |key, val|
-      self.send(:"#{key}=", val)
-    end
+    options.each { |key, val| self.send(:"#{key}=", val) }
   end
 end
 
 module Associatable
-  # Phase IIIb
   def belongs_to(name, options = {})
     assoc_options[name] = BelongsToOptions.new(name, options)
     options = assoc_options[name]
@@ -74,7 +64,7 @@ module Associatable
   end
 
   def assoc_options
-    @assoc_options ||= {}
+    self.assoc_options ||= {}
   end
 end
 

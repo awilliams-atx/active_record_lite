@@ -1,6 +1,6 @@
-# rQuery
+# Rowboat
 
-rQuery is a lightweight SQLite3 database ORM influenced by Active Record for development in Rails. With it, programmers can declare associations between tables, which in turn conveniently defines methods on virtual database object which fire off SQL queries.
+Rowboat is a lightweight SQLite3 database ORM influenced by Active Record for development in Rails. With it, programmers can declare associations between tables, which in turn conveniently defines methods on virtual database object which fire off SQL queries.
 
 #### Persisting to a database
 
@@ -13,7 +13,7 @@ end
 
 #### Associations
 
-Classes can be linked through rQuery via association methods.
+Classes can be linked through Rowboat via association methods.
 
 ```ruby
 class Pokemon < SQLObject
@@ -37,15 +37,15 @@ class Employee
 end
 ```
 
-Without providing the options hash to the `has_many` association above, rQuery would look for a table called `subordinates`.
+Without providing the options hash to the `has_many` association above, Rowboat would look for a table called `subordinates`.
 
 A `SQLObject` does not store its attributes as instance variables; instead, they are stored in an `attributes` hash. This nesting is important because a `SQLObject` has a number of other important instance variables, like column names.
 
-A key feature of rQuery is lazy assignment of variables. One important place where this happens is in `SQLObject#columns`; declaring it once as an instance variable keeps
+A key feature of Rowboat is lazy assignment of variables. One important place where this happens is in `SQLObject#columns`; declaring it once as an instance variable keeps
 
 #### Magic
 
-rQuery makes an attempt where appropriate to do what you want, not what you say. This means, for example, deducing an appropriate SQL query.
+Rowboat makes an attempt where appropriate to do what you want, not what you say. This means, for example, deducing an appropriate SQL query.
 
 ```ruby
   ceru = Gym.new
@@ -61,9 +61,9 @@ rQuery makes an attempt where appropriate to do what you want, not what you say.
   bulb.trainer =  misty.id
 ```
 
-In all above cases, rQuery will write an INSERT query in SQL since the attribute `id` is absent from all objects on instantiation.
+In all above cases, Rowboat will write an INSERT query in SQL since the attribute `id` is absent from all objects on instantiation.
 
-## The future of rQuery
+## The future of Rowboat
 
 * **Validations** - Methods that prevent protect a database from invalid data entry.
 * **Callbacks** - Methods that run at various points in the lifecycle of a SQLObject

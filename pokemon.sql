@@ -8,7 +8,7 @@ CREATE TABLE pokemon (
 
 CREATE TABLE trainers (
   id INTEGER PRIMARY KEY,
-  fname VARCHAR(255) NOT NULL,
+  name VARCHAR(255) NOT NULL,
   gym_id INTEGER,
 
   FOREIGN KEY (gym_id) REFERENCES gym(id)
@@ -16,7 +16,7 @@ CREATE TABLE trainers (
 
 CREATE TABLE gyms (
   id INTEGER PRIMARY KEY,
-  address VARCHAR(255) NOT NULL
+  name VARCHAR(255) NOT NULL
 );
 
 INSERT INTO
@@ -25,7 +25,7 @@ VALUES
   (1, "Pewter Gym"), (2, "Cerulean Gym"), (3, "Vermilion Gym");
 
 INSERT INTO
-  trainers (id, fname, gym_id)
+  trainers (id, name, gym_id)
 VALUES
   (1, "Brock", 1),
   (2, "Misty", 2),

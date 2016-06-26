@@ -22,21 +22,21 @@ CREATE TABLE gyms (
 INSERT INTO
   gyms (id, name)
 VALUES
-  (1, "Pewter Gym"), (2, "Cerulean Gym");
+  (1, "Pewter Gym"), (2, "Cerulean Gym"), (3, "Vermilion Gym");
 
 INSERT INTO
   trainers (id, fname, gym_id)
 VALUES
   (1, "Brock", 1),
   (2, "Misty", 2),
-  (3, "Ned", "Ruggeri", 2),
-  (4, "Catless", "Human", NULL);
+  (3, "Lt. Surge", 3),
+  (4, "Professor Oak", NULL);
 
 INSERT INTO
   pokemon (id, name, trainer_id)
 VALUES
-  (1, "Breakfast", 1),
-  (2, "Earl", 2),
-  (3, "Haskell", 3),
-  (4, "Markov", 3),
-  (5, "Stray Cat", NULL);
+  (1, "Onyx", 1),
+  (2, "Krabby", 2),
+  (3, "Pikachu", 3),
+  (4, "Voltorb", 3),
+  (5, "Mew", NULL);

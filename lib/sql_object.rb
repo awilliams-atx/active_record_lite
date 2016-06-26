@@ -74,6 +74,10 @@ class SQLObject
   def attributes
     @attributes ||= {}
   end
+  
+  def save
+    attributes[:id].nil? ? insert : update
+  end
 
   def update
     query = <<-SQL
@@ -86,10 +90,6 @@ class SQLObject
     SQL
 
     DBConnection.execute(query, attribute_values[1..-1], attributes[:id])
-  end
-
-  def save
-    attributes[:id].nil? ? insert : update
   end
 
   private

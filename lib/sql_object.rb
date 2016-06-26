@@ -71,28 +71,8 @@ class SQLObject
     results.empty? ? nil : new(results.first)
   end
 
-  def self.parse_all(results)
-    results.map { |result| new(result) }
-  end
-
   def attributes
     @attributes ||= {}
-  end
-
-  def attribute_values
-    attributes.values
-  end
-
-  def insert
-    query = <<-SQL
-      INSERT INTO
-        #{self.class.table_name} #{column_names}
-      VALUES
-        #{question_marks_line}
-    SQL
-
-    DBConnection.execute(query, attribute_values)
-    self.send(:id=, DBConnection.last_insert_row_id)
   end
 
   def update
@@ -114,6 +94,14 @@ class SQLObject
 
   private
 
+  def self.parse_all(results)
+    results.map { |result| new(result) }
+  end
+
+  def attribute_values
+    attributes.values
+  end
+
   def columns
     self.class.columns[1..-1]
   end
@@ -124,6 +112,18 @@ class SQLObject
 
   def column_exists?(column)
     self.class.columns.include?(column)
+  end
+
+  def insert
+    query = <<-SQL
+    INSERT INTO
+    #{self.class.table_name} #{column_names}
+    VALUES
+    #{question_marks_line}
+    SQL
+
+    DBConnection.execute(query, attribute_values)
+    self.send(:id=, DBConnection.last_insert_row_id)
   end
 
   def question_marks_line

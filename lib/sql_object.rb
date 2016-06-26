@@ -128,11 +128,11 @@ class SQLObject
 
   def insert
     query = <<-SQL
-    INSERT INTO
-    #{self.class.table_name} #{column_names}
-    VALUES
-    #{question_marks_line}
-    SQL
+      INSERT INTO
+        #{self.class.table_name} #{column_names}
+      VALUES
+        #{question_marks_line}
+      SQL
 
     DBConnection.execute(query, attribute_values)
     self.send(:id=, DBConnection.last_insert_row_id)

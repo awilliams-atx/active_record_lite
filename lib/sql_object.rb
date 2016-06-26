@@ -1,6 +1,7 @@
 require_relative 'db_connection'
 require_relative 'searchable'
 require 'active_support/inflector'
+require 'byebug'
 
 class SQLObject
   extend Searchable
@@ -14,12 +15,12 @@ class SQLObject
   end
 
   def self.columns
-    self.columns ||=
+    @columns ||=
       DBConnection.execute2(<<-SQL).first.map(&:to_sym)
         SELECT
           *
         FROM
-          #{table_name}
+          #{self.table_name}
         LIMIT
           0
         SQL
@@ -42,7 +43,7 @@ class SQLObject
   end
 
   def self.table_name
-    self.table_name ||= self.to_s.tableize
+    @table_name ||= self.to_s.tableize
   end
 
   def self.all
@@ -50,7 +51,7 @@ class SQLObject
       SELECT
         *
       FROM
-        #{table_name}
+        #{self.table_name}
       SQL
   end
 
@@ -60,7 +61,7 @@ class SQLObject
         SELECT
           *
         FROM
-          #{table_name}
+          #{self.table_name}
         WHERE
           id = :id
       SQL

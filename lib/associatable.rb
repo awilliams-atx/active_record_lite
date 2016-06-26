@@ -36,38 +36,3 @@ class HasManyOptions < AssocOptions
     options.each { |key, val| self.send(:"#{key}=", val) }
   end
 end
-
-module Associatable
-  def belongs_to(name, options = {})
-    assoc_options[name] = BelongsToOptions.new(name, options)
-    options = assoc_options[name]
-
-    define_method(:"#{name}") do
-      model_class = options.model_class
-      foreign_key_id = self.send(options.foreign_key)
-
-      result = model_class.where(options.primary_key => foreign_key_id)
-
-      result.empty? ? nil : result.first
-    end
-  end
-
-  def has_many(name, options = {})
-    options = HasManyOptions.new(name, to_s, options)
-    define_method(:"#{name.to_s.pluralize.to_sym}") do
-      model_class = options.model_class
-
-      result = model_class.where(options.foreign_key => self.id)
-
-      result.empty? ? [] : result
-    end
-  end
-
-  def assoc_options
-    self.assoc_options ||= {}
-  end
-end
-
-class SQLObject
-  extend Associatable
-end

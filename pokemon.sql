@@ -1,4 +1,4 @@
-CREATE TABLE pokemon (
+CREATE TABLE pokemons (
   id INTEGER PRIMARY KEY,
   name VARCHAR(255) NOT NULL,
   trainer_id INTEGER,

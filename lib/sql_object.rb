@@ -74,7 +74,19 @@ class SQLObject
   def attributes
     @attributes ||= {}
   end
-  
+
+  def destroy
+    query = <<-SQL
+      DELETE
+      FROM
+        #{self.class.table_name}
+      WHERE
+        id = #{self.id}
+    SQL
+
+    DBConnection.execute(query)
+  end
+
   def save
     attributes[:id].nil? ? insert : update
   end

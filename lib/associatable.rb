@@ -38,7 +38,7 @@ module Associatable
   end
 
   def assoc_options
-    self.assoc_options ||= {}
+    @assoc_options ||= {}
   end
 
   private

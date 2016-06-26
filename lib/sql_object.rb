@@ -86,7 +86,7 @@ class SQLObject
   def insert
     query = <<-SQL
       INSERT INTO
-        #{klass.table_name} #{column_names}
+        #{self.class.table_name} #{column_names}
       VALUES
         #{question_marks_line}
     SQL
@@ -98,7 +98,7 @@ class SQLObject
   def update
     query = <<-SQL
       UPDATE
-        #{klass.table_name}
+        #{self.class.table_name}
       SET
         #{set_line}
       WHERE
@@ -115,7 +115,7 @@ class SQLObject
   private
 
   def columns
-    klass.columns[1..-1]
+    self.class.columns[1..-1]
   end
 
   def column_names
@@ -123,11 +123,7 @@ class SQLObject
   end
 
   def column_exists?(column)
-    klass.columns.include?(column)
-  end
-
-  def klass
-    self.class
+    self.class.columns.include?(column)
   end
 
   def question_marks_line

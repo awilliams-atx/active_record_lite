@@ -33,7 +33,7 @@ VALUES
   (4, "Professor Oak", NULL);
 
 INSERT INTO
-  pokemon (id, name, trainer_id)
+  pokemons (id, name, trainer_id)
 VALUES
   (1, "Onyx", 1),
   (2, "Krabby", 2),

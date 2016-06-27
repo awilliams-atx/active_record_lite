@@ -16,16 +16,25 @@ class SQLObject
     end
   end
 
+  def self.all
+    parse_all DBConnection.execute(<<-SQL)
+      SELECT
+        *
+      FROM
+        #{self.table_name}
+      SQL
+  end
+
   def self.columns
     @columns ||=
-      DBConnection.execute2(<<-SQL).first.map(&:to_sym)
-        SELECT
-          *
-        FROM
-          #{self.table_name}
-        LIMIT
-          0
-        SQL
+    DBConnection.execute2(<<-SQL).first.map(&:to_sym)
+    SELECT
+      *
+    FROM
+      #{self.table_name}
+    LIMIT
+      0
+    SQL
   end
 
   def self.finalize!
@@ -40,23 +49,6 @@ class SQLObject
     end
   end
 
-  def self.table_name=(table_name)
-    self.table_name = table_name
-  end
-
-  def self.table_name
-    @table_name ||= self.to_s.tableize
-  end
-
-  def self.all
-    parse_all DBConnection.execute(<<-SQL)
-      SELECT
-        *
-      FROM
-        #{self.table_name}
-      SQL
-  end
-
   def self.find(id)
     results =
       DBConnection.execute(<<-SQL, id: id)
@@ -69,6 +61,14 @@ class SQLObject
       SQL
 
     results.empty? ? nil : new(results.first)
+  end
+
+  def self.table_name=(table_name)
+    self.table_name = table_name
+  end
+
+  def self.table_name
+    @table_name ||= self.to_s.tableize
   end
 
   def attributes
@@ -128,11 +128,11 @@ class SQLObject
 
   def insert
     query = <<-SQL
-      INSERT INTO
-        #{self.class.table_name} #{column_names}
-      VALUES
-        #{question_marks_line}
-      SQL
+    INSERT INTO
+      #{self.class.table_name} #{column_names}
+    VALUES
+      #{question_marks_line}
+    SQL
 
     DBConnection.execute(query, attribute_values)
     self.send(:id=, DBConnection.last_insert_row_id)

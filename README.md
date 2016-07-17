@@ -2,29 +2,6 @@
 
 Rowboat is a lightweight SQLite3 ORM. Features include...
 
-* #### Ruby-wrapped record objects
-
-```ruby
-# Retrieve Pokemon 'Pikachu' from database
-pikachu = Pokemon.where(name: 'Pikachu')
-
-# Retrieve Pikachu trainer 'Ash Ketchum' from database
-ash = pikachu.trainer
-
-# Create new Pokemon, stage for persisting to database
-# Note the typing mistake:
-snorlax = Pokemon.new(name: 'Snrlax', trainer_id: ash.id)
-
-# Insert row into pokemons table
-snorlax.save
-
-# Edit Pokemon Snorlax for updating
-snorlax.name = 'Snorlax'
-
-# Update row in pokemons table
-snorlax.save
-```
-
 * #### Dynamic method creation for database interfacing
 
 ```ruby
@@ -34,6 +11,26 @@ end
 
 # Retrieve column names, creating setter and getter instance methods for each.
 Pokemon.finalize!
+```
+
+* #### Ruby-wrapped record objects
+
+```ruby
+# Retrieve records
+pikachu = Pokemon.where(name: 'Pikachu')
+ash = Trainer.where(name: 'Ash')
+
+# Set record attribute
+pikachu.trainer_id = ash.id
+
+# Update record
+pikachu.save
+
+# Stage new record object for persisting
+snorlax = Pokemon.new(name: 'Snorlax', trainer_id: ash.id)
+
+# Insert record
+snorlax.save
 ```
 
 * #### Association methods
@@ -58,6 +55,15 @@ class Pokemon < SQLObject
 end
 
 Pokemon.finalize!
+
+# Retrieve record
+gym = Gym.all.sample
+  # => <Gym:0x007ffe3c0e4a38 @attributes={:id=>1, :name=>"Pewter Gym"}>
+# Traverse association, retrieve record
+trainer = pewter.trainers.sample
+  # => #<Trainer:0x007ffe3c83f878 @attributes={:id=>1, :name=>"Brock", :gym_id=>1}>
+pokemon = trainer.pokemons.sample
+  # => #<Pokemon:0x007ffe3cd07090 @attributes={:id=>1, :name=>"Onyx", :trainer_id=>1}>
 ```
 
 **NB:** The `#has_one_through` association is dependent upon the associations it traverses. Dependent associations must be declared after their dependencies.

@@ -2,7 +2,7 @@
 
 Rowboat is a lightweight SQLite3 ORM. Features include...
 
-* #### Dynamic method creation for database interfacing
+#### Dynamic method creation for database interfacing
 
 ```ruby
 # Stage Ruby class representation of SQL table.
@@ -13,7 +13,7 @@ end
 Pokemon.finalize!
 ```
 
-* #### Ruby-wrapped record objects
+#### Ruby-wrapped record objects
 
 ```ruby
 # Retrieve records
@@ -33,7 +33,7 @@ snorlax = Pokemon.new(name: 'Snorlax', trainer_id: ash.id)
 snorlax.save
 ```
 
-* #### Association methods
+#### Association methods
 
 ```ruby
 class Gym < SQLObject
